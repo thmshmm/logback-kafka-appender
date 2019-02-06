@@ -21,7 +21,8 @@ public interface GenericEventMapper {
             @Mapping(source = "level", target = "level", qualifiedByName = "levelToString"),
             @Mapping(source = "loggerName", target = "logger"),
             @Mapping(source = "threadName", target = "thread"),
-            @Mapping(source = "formattedMessage", target = "message")
+            @Mapping(source = "formattedMessage", target = "message"),
+            @Mapping(source = "MDCPropertyMap", target = "mdc")
     })
     GenericEvent toGenericEvent(ILoggingEvent event);
 

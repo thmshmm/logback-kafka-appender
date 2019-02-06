@@ -6,6 +6,8 @@ import ch.qos.logback.classic.spi.LoggingEvent;
 import org.junit.Test;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -52,5 +54,25 @@ public class JsonLayoutTest {
                 )
         );
         assertTrue(res.contains("\"host\":\"localhost\""));
+    }
+
+    @Test
+    public void testMDC() {
+        final JsonLayout layout = new JsonLayout();
+        final Logger logger = (Logger) LoggerFactory.getLogger(JsonLayoutTest.class);
+        LoggingEvent event = new LoggingEvent(
+                JsonLayoutTest.class.getCanonicalName(),
+                logger,
+                Level.DEBUG,
+                "Some debug msg",
+                null,
+                new Object[]{}
+        );
+        HashMap<String, String> mdcMap = new HashMap<>();
+        mdcMap.put("key1", "val1");
+        event.setMDCPropertyMap(mdcMap);
+        String res = layout.doLayout(event);
+        System.out.println(res);
+        assertTrue(res.contains("\"mdc\":{\"key1\":\"val1\"}"));
     }
 }

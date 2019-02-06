@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Map;
+
 /**
  * Created by Thomas Hamm on 04.02.19.
  */
@@ -17,4 +19,5 @@ public class GenericEvent {
     private String logger;
     private String thread;
     private String message;
+    private Map<String, String> mdc;
 }

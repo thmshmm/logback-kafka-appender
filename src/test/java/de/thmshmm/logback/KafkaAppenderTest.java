@@ -10,6 +10,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.times;
@@ -49,5 +50,16 @@ public class KafkaAppenderTest {
         verify(layout).doLayout(debugEvent.capture());
         verify(layout, times(1)).doLayout(event.capture());
         System.out.println(event);
+    }
+
+    @Test
+    public void testMDC() {
+        Logger logger = (Logger) LoggerFactory.getLogger(KafkaAppenderTest.class);
+        logger.addAppender(appender);
+        MDC.put("key1", "val1");
+        logger.debug("Test with MDC");
+        ArgumentCaptor<ILoggingEvent> debugEvent = ArgumentCaptor.forClass(ILoggingEvent.class);
+        verify(appender, times(1)).doAppend(debugEvent.capture());
+        assertTrue(debugEvent.getValue().getMDCPropertyMap().get("key1").equals("val1"));
     }
 }
